@@ -21,6 +21,11 @@ class ModelTrainer:
             "is_discount_sensitive",
             "is_high_order"
             ])
+            import joblib
+
+            FEATURE_COLUMNS = X.columns.tolist()
+
+            joblib.dump(FEATURE_COLUMNS, "models/feature_columns.pkl")
 
             y = df[TARGET_COLUMN]
 
