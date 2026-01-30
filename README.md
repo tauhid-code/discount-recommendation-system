@@ -37,3 +37,51 @@ if customer is discount-sensitive AND NOT a high-order customer
 else 0
 
 This ensures discounts are recommended **only to customers who can potentially grow**, avoiding unnecessary spending on already loyal users.
+
+## Explainability with SHAP
+
+This project includes both Global and Local SHAP explainability, making the model fully interpretable.
+
+### Global SHAP (Model-Level Explainability)
+
+Purpose:
+Understand which features influence discount decisions across all customers.
+
+How it works:
+
+SHAP values are computed on the training dataset
+
+Mean absolute SHAP values are aggregated
+
+Top contributing features are saved to: models/global_shap.csv
+
+Usage:
+
+Displayed as a pie chart in the Streamlit UI
+
+Helps stakeholders answer:
+
+“What generally drives discount recommendations?”
+
+### Local SHAP (Prediction-Level Explainability)
+
+Purpose:
+Explain why a specific customer received (or didn’t receive) a discount.
+
+How it works:
+
+SHAP values are computed per prediction
+
+Shows how each feature pushes the probability up or down
+
+Used alongside the predicted probability
+
+Usage:
+
+Returned by the Flask API
+
+Can be visualized as:
+
+Feature contribution breakdown
+
+Explanation text in UI
