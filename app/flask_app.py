@@ -1,7 +1,7 @@
 import os
 import sys
+import csv
 from flask import Flask, request, jsonify
-
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.abspath(os.path.join(BASE_DIR, ".."))
@@ -11,13 +11,25 @@ from src.predict import DiscountPredictor
 
 app = Flask(__name__)
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_ROOT = os.path.abspath(os.path.join(BASE_DIR, ".."))
-
 predictor = DiscountPredictor(
     model_path=os.path.join(PROJECT_ROOT, "models", "random_forest_model.pkl"),
     feature_columns_path=os.path.join(PROJECT_ROOT, "models", "feature_columns.pkl")
 )
+
+def load_global_shap():
+    shap_path = os.path.join(PROJECT_ROOT, "models", "global_shap.csv")
+    data = []
+    with open(shap_path, newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            data.append({
+                "feature": row["feature"],
+                "importance": float(row["importance"])
+            })
+    data.sort(key=lambda x: x["importance"], reverse=True)
+    return data
+
+GLOBAL_SHAP = load_global_shap()
 
 
 @app.route("/predict", methods=["POST"])
