@@ -1,13 +1,16 @@
+import sys
+import os
 import streamlit as st
-import requests
 import pandas as pd
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import os
 
 BASE_DIR     = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.abspath(os.path.join(BASE_DIR, ".."))
+sys.path.insert(0, PROJECT_ROOT)
+
+from src.predict import DiscountPredictor
 
 st.set_page_config(
     page_title="Discount Recommendation Model",
@@ -15,11 +18,19 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
+@st.cache_resource
+def load_predictor():
+    return DiscountPredictor(
+        model_path=os.path.join(PROJECT_ROOT, "models", "random_forest_model.pkl"),
+        feature_columns_path=os.path.join(PROJECT_ROOT, "models", "feature_columns.pkl")
+    )
+
 @st.cache_data
 def load_global_shap():
     df = pd.read_csv(os.path.join(PROJECT_ROOT, "models", "global_shap.csv"))
     return df.sort_values("importance", ascending=False).head(10)
 
+predictor      = load_predictor()
 global_shap_df = load_global_shap()
 
 if "result" not in st.session_state:
@@ -150,7 +161,7 @@ hr { border: none; border-top: 1px solid #f0f0f0; margin: 6px 0 14px 0; }
 
 st.markdown("""
 <div class="app-header">
-    <h1> Discount Recommendation Model</h1>
+    <h1>🏷️ Discount Recommendation Model</h1>
     <p>Smarter discounts, happier customers — powered by machine learning.</p>
 </div>
 """, unsafe_allow_html=True)
@@ -159,7 +170,7 @@ left, right = st.columns(2, gap="large")
 
 with left:
     st.markdown(
-        '<p style="font-size:26px;font-weight:700;color:#1e1e1e;margin:0 0 4px;"> Customer Details</p>',
+        '<p style="font-size:26px;font-weight:700;color:#1e1e1e;margin:0 0 4px;">📋 Customer Details</p>',
         unsafe_allow_html=True
     )
     st.markdown(
@@ -193,19 +204,15 @@ with left:
     if submitted:
         with st.spinner("Analysing customer data…"):
             try:
-                res = requests.post(
-                    "http://localhost:5000/predict",
-                    json={
-                        "orders":       orders,
-                        "discount":     discount,
-                        "order_value":  float(order_value),
-                        "delivery_exp": delivery_exp,
-                    },
-                    timeout=5,
-                ).json()
+                res = predictor.predict({
+                    "orders":       orders,
+                    "discount":     discount,
+                    "order_value":  float(order_value),
+                    "delivery_exp": delivery_exp,
+                })
                 st.session_state.result = res
             except Exception as e:
-                st.error(f" Could not reach Flask server at localhost:5000.\n\n{e}")
+                st.error(f"❌ Prediction failed: {e}")
                 st.session_state.result = None
 
 with right:
@@ -218,10 +225,10 @@ with right:
             align-items:center; justify-content:center;
             min-height:60vh; color:#ccc; text-align:center; gap:14px;
         ">
-            <div style="font-size:3.8rem;"></div>
+            <div style="font-size:3.8rem;">📊</div>
             <p style="font-size:1.5rem; max-width:500px; line-height:1.65; color:#888;">
                 Adjust the sliders on the left and click
-                <strong style="color:#aaa;"> Evaluate Customer</strong>
+                <strong style="color:#aaa;">⚡ Evaluate Customer</strong>
                 to see the recommendation and SHAP analysis here.
             </p>
         </div>
@@ -231,11 +238,10 @@ with right:
         recommend  = result.get("recommend_discount", 0)
         confidence = result.get("confidence", 0.5)
         reason     = result.get("reason", "ML-based decision")
-        shap_exp   = result.get("shap_explanation", [])
 
         yes   = recommend == 1
         pct   = round(confidence * 100)
-        v_txt = "  Discount Recommended" if yes else "  Discount Not Recommended"
+        v_txt = "✅  Discount Recommended" if yes else "❌  Discount Not Recommended"
         v_col = "#28a745" if yes else "#dc3545"
 
         st.markdown(f"""
@@ -256,7 +262,7 @@ with right:
                 background:#FFF0E6; color:#FF6200;
                 font-size:0.8rem; font-weight:600;
                 padding:5px 14px; border-radius:99px;
-            "> {reason}</span>
+            ">💡 {reason}</span>
             <div style="margin-top:18px;">
                 <div style="display:flex;justify-content:space-between;font-size:0.82rem;color:#888;margin-bottom:6px;">
                     <span>Model Confidence</span><span>{pct}%</span>
@@ -270,7 +276,7 @@ with right:
 
         st.markdown("""
         <div style="margin-bottom:6px;">
-            <span style="font-size:1.2rem;font-weight:700;color:#1e1e1e;"> Global SHAP Analysis</span><br>
+            <span style="font-size:1.2rem;font-weight:700;color:#1e1e1e;">🌐 Global SHAP Analysis</span><br>
             <span style="font-size:0.78rem;color:#999;">Overall feature importance across the entire trained model.</span>
         </div>
         <hr style="border-top:1px solid #ebebeb;margin:8px 0 14px;">
@@ -279,16 +285,8 @@ with right:
         gdf = global_shap_df.sort_values("importance", ascending=False).copy()
 
         global_palette = [
-            "#FF6200",
-            "#1A73E8",
-            "#28A745",
-            "#DC3545",
-            "#FFC107",
-            "#6F42C1",
-            "#17A2B8",
-            "#E83E8C",
-            "#20C997",
-            "#FD7E14",
+            "#FF6200", "#1A73E8", "#28A745", "#DC3545", "#FFC107",
+            "#6F42C1", "#17A2B8", "#E83E8C", "#20C997", "#FD7E14",
         ]
         global_colors = [global_palette[i % len(global_palette)] for i in range(len(gdf))]
 
