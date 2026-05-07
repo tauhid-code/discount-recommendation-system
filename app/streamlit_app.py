@@ -77,7 +77,9 @@ html, body, [class*="css"] {
     background: transparent !important;
 }
 
-[data-testid="column"] {
+[data-testid="column"],
+[data-testid="stColumn"],
+[data-testid="stVerticalBlockBorderWrapper"] {
     background: #ffffff !important;
     border-radius: 18px !important;
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.09) !important;
@@ -85,7 +87,9 @@ html, body, [class*="css"] {
     border: 1px solid #ebebeb !important;
 }
 
-[data-testid="column"] [data-testid="column"] {
+[data-testid="column"] [data-testid="column"],
+[data-testid="stColumn"] [data-testid="stColumn"],
+[data-testid="stVerticalBlockBorderWrapper"] [data-testid="stVerticalBlockBorderWrapper"] {
     background: transparent !important;
     border-radius: 0 !important;
     box-shadow: none !important;
@@ -94,36 +98,22 @@ html, body, [class*="css"] {
     min-height: unset !important;
 }
 
-[data-testid="stSlider"] > div > div > div > div,
-[data-baseweb="slider"] > div > div > div,
-[data-baseweb="slider"] div div div {
-    background: #FF6200 !important;
-    height: 16px !important;
-    border-radius: 99px !important;
-}
+div[data-baseweb="slider"] > div,
+div[data-baseweb="slider"] > div > div,
 [data-testid="stSlider"] > div > div > div,
-[data-baseweb="slider"] > div > div {
-    height: 16px !important;
+[data-testid="stSlider"] > div > div > div > div {
+    height: 14px !important;
     border-radius: 99px !important;
-    background: #e0e0e0 !important;
 }
-div[data-baseweb="slider"] div[role="slider"],
-[data-testid="stSlider"] div[role="slider"] {
+
+div[data-baseweb="slider"] div[role="slider"] {
     background: #FF6200 !important;
     border: 3px solid #ffffff !important;
     box-shadow: 0 0 0 2px #FF6200 !important;
     width: 26px !important;
     height: 26px !important;
 }
-[data-testid="stSlider"] label,
-[data-testid="stSlider"] label p,
-[data-testid="stSlider"] label span,
-[data-testid="stSlider"] .st-emotion-cache-ue6h4q,
-div[data-testid="stSlider"] > label {
-    font-size: 16px !important;
-    font-weight: 600 !important;
-    color: #1e1e1e !important;
-}
+
 [data-testid="stSlider"] [data-testid="stMarkdownContainer"] p {
     color: #FF6200 !important;
     font-weight: 700 !important;
