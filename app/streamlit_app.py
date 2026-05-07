@@ -51,28 +51,28 @@ html, body, [class*="css"] {
 .app-header {
     background: linear-gradient(135deg, #FF6200 0%, #FF8C38 100%);
     text-align: center;
-    padding: 36px 24px 28px;
+    padding: 16px 24px 12px;
     box-shadow: 0 4px 18px rgba(255, 98, 0, 0.28);
     margin-bottom: 0;
 }
 .app-header h1 {
     color: #ffffff;
-    font-size: 2.15rem;
+    font-size: 1.7rem;
     font-weight: 800;
-    margin: 0 0 8px 0;
+    margin: 0 0 4px 0;
     letter-spacing: 0.3px;
 }
 .app-header p {
     color: rgba(255,255,255,0.93);
-    font-size: 1rem;
+    font-size: 0.85rem;
     font-style: italic;
     font-weight: 300;
     margin: 0;
 }
 
 [data-testid="stHorizontalBlock"] {
-    padding: 28px 32px !important;
-    gap: 28px !important;
+    padding: 14px 20px !important;
+    gap: 20px !important;
     align-items: flex-start !important;
     background: transparent !important;
 }
@@ -81,9 +81,9 @@ html, body, [class*="css"] {
     background: #ffffff !important;
     border-radius: 18px !important;
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.09) !important;
-    padding: 36px 40px !important;
+    padding: 20px 24px !important;
     border: 1px solid #ebebeb !important;
-    min-height: 76vh !important;
+    min-height: auto !important;
 }
 
 [data-testid="stHorizontalBlock"] [data-testid="stHorizontalBlock"] > div {
@@ -134,11 +134,11 @@ div[data-testid="stSlider"] > label {
 .stFormSubmitButton > button {
     background: linear-gradient(135deg, #FF6200, #FF8C38) !important;
     color: #ffffff !important;
-    font-size: 1.3rem !important;
+    font-size: 1.1rem !important;
     font-weight: 700 !important;
     border: none !important;
     border-radius: 14px !important;
-    padding: 18px 40px !important;
+    padding: 12px 40px !important;
     width: 95% !important;
     white-space: nowrap !important;
     letter-spacing: 0.5px !important;
@@ -170,32 +170,32 @@ left, right = st.columns(2, gap="large")
 
 with left:
     st.markdown(
-        '<p style="font-size:26px;font-weight:700;color:#1e1e1e;margin:0 0 4px;">📋 Customer Details</p>',
+        '<p style="font-size:20px;font-weight:700;color:#1e1e1e;margin:0 0 2px;">📋 Customer Details</p>',
         unsafe_allow_html=True
     )
     st.markdown(
-        '<p style="font-size:1rem;color:#888;margin:0 0 24px;">Adjust the sliders to match the customer\'s profile.</p>',
+        '<p style="font-size:0.85rem;color:#888;margin:0 0 12px;">Adjust the sliders to match the customer\'s profile.</p>',
         unsafe_allow_html=True
     )
 
     with st.form("eval_form"):
 
-        st.markdown('<p style="font-size:20px;font-weight:600;color:#1e1e1e;margin-bottom:0;">Number of Orders Placed</p>', unsafe_allow_html=True)
+        st.markdown('<p style="font-size:15px;font-weight:600;color:#1e1e1e;margin-bottom:0;">Number of Orders Placed</p>', unsafe_allow_html=True)
         orders = st.slider("Number of Orders Placed", min_value=1, max_value=100, value=25, step=1, label_visibility="collapsed")
         st.caption("Lifetime order count for this customer.")
-        st.markdown('<hr style="margin:4px 0 10px 0;">', unsafe_allow_html=True)
+        st.markdown('<hr style="margin:2px 0 6px 0;">', unsafe_allow_html=True)
 
-        st.markdown('<p style="font-size:20px;font-weight:600;color:#1e1e1e;margin-bottom:0;">Discount Preference &nbsp;<span style="font-weight:400;color:#888;font-size:17px;">(1 = Not Interested · 5 = Highly Interested)</span></p>', unsafe_allow_html=True)
+        st.markdown('<p style="font-size:15px;font-weight:600;color:#1e1e1e;margin-bottom:0;">Discount Preference &nbsp;<span style="font-weight:400;color:#888;font-size:13px;">(1 = Not Interested · 5 = Highly Interested)</span></p>', unsafe_allow_html=True)
         discount = st.slider("Discount Preference", min_value=1, max_value=5, value=3, step=1, label_visibility="collapsed")
         st.caption("Propensity score based on past coupon redemptions.")
-        st.markdown('<hr style="margin:4px 0 10px 0;">', unsafe_allow_html=True)
+        st.markdown('<hr style="margin:2px 0 6px 0;">', unsafe_allow_html=True)
 
-        st.markdown('<p style="font-size:20px;font-weight:600;color:#1e1e1e;margin-bottom:0;">Average Order Value (₹)</p>', unsafe_allow_html=True)
+        st.markdown('<p style="font-size:15px;font-weight:600;color:#1e1e1e;margin-bottom:0;">Average Order Value (₹)</p>', unsafe_allow_html=True)
         order_value = st.slider("Average Order Value", min_value=100, max_value=2000, value=500, step=50, label_visibility="collapsed")
         st.caption("Mean gross transaction value across all successful orders.")
-        st.markdown('<hr style="margin:4px 0 10px 0;">', unsafe_allow_html=True)
+        st.markdown('<hr style="margin:2px 0 6px 0;">', unsafe_allow_html=True)
 
-        st.markdown('<p style="font-size:20px;font-weight:600;color:#1e1e1e;margin-bottom:0;">Delivery Experience &nbsp;<span style="font-weight:400;color:#888;font-size:17px;">(1 = Very Poor · 5 = Excellent)</span></p>', unsafe_allow_html=True)
+        st.markdown('<p style="font-size:15px;font-weight:600;color:#1e1e1e;margin-bottom:0;">Delivery Experience &nbsp;<span style="font-weight:400;color:#888;font-size:13px;">(1 = Very Poor · 5 = Excellent)</span></p>', unsafe_allow_html=True)
         delivery_exp = st.slider("Delivery Experience", min_value=1, max_value=5, value=3, step=1, label_visibility="collapsed")
         st.caption("Subjective sentiment score based on logistics feedback.")
 
