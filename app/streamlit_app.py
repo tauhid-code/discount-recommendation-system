@@ -77,16 +77,15 @@ html, body, [class*="css"] {
     background: transparent !important;
 }
 
-[data-testid="stHorizontalBlock"]:first-of-type > div {
+[data-testid="column"] {
     background: #ffffff !important;
     border-radius: 18px !important;
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.09) !important;
     padding: 20px 24px !important;
     border: 1px solid #ebebeb !important;
-    min-height: auto !important;
 }
 
-[data-testid="stHorizontalBlock"] [data-testid="stHorizontalBlock"] > div {
+[data-testid="column"] [data-testid="column"] {
     background: transparent !important;
     border-radius: 0 !important;
     box-shadow: none !important;
@@ -95,17 +94,21 @@ html, body, [class*="css"] {
     min-height: unset !important;
 }
 
-[data-testid="stSlider"] > div > div > div > div {
+[data-testid="stSlider"] > div > div > div > div,
+[data-baseweb="slider"] > div > div > div,
+[data-baseweb="slider"] div div div {
     background: #FF6200 !important;
     height: 16px !important;
     border-radius: 99px !important;
 }
-[data-testid="stSlider"] > div > div > div {
+[data-testid="stSlider"] > div > div > div,
+[data-baseweb="slider"] > div > div {
     height: 16px !important;
     border-radius: 99px !important;
     background: #e0e0e0 !important;
 }
-div[data-baseweb="slider"] div[role="slider"] {
+div[data-baseweb="slider"] div[role="slider"],
+[data-testid="stSlider"] div[role="slider"] {
     background: #FF6200 !important;
     border: 3px solid #ffffff !important;
     box-shadow: 0 0 0 2px #FF6200 !important;
@@ -161,7 +164,7 @@ hr { border: none; border-top: 1px solid #f0f0f0; margin: 6px 0 14px 0; }
 
 st.markdown("""
 <div class="app-header">
-    <h1>🏷️ Discount Recommendation Model</h1>
+    <h1>Discount Recommendation Model</h1>
     <p>Smarter discounts, happier customers — powered by machine learning.</p>
 </div>
 """, unsafe_allow_html=True)
@@ -170,7 +173,7 @@ left, right = st.columns(2, gap="large")
 
 with left:
     st.markdown(
-        '<p style="font-size:20px;font-weight:700;color:#1e1e1e;margin:0 0 2px;">📋 Customer Details</p>',
+        '<p style="font-size:20px;font-weight:700;color:#1e1e1e;margin:0 0 2px;">Customer Details</p>',
         unsafe_allow_html=True
     )
     st.markdown(
@@ -190,7 +193,7 @@ with left:
         st.caption("Propensity score based on past coupon redemptions.")
         st.markdown('<hr style="margin:2px 0 6px 0;">', unsafe_allow_html=True)
 
-        st.markdown('<p style="font-size:15px;font-weight:600;color:#1e1e1e;margin-bottom:0;">Average Order Value (₹)</p>', unsafe_allow_html=True)
+        st.markdown('<p style="font-size:15px;font-weight:600;color:#1e1e1e;margin-bottom:0;">Average Order Value (Rs.)</p>', unsafe_allow_html=True)
         order_value = st.slider("Average Order Value", min_value=100, max_value=2000, value=500, step=50, label_visibility="collapsed")
         st.caption("Mean gross transaction value across all successful orders.")
         st.markdown('<hr style="margin:2px 0 6px 0;">', unsafe_allow_html=True)
@@ -199,10 +202,10 @@ with left:
         delivery_exp = st.slider("Delivery Experience", min_value=1, max_value=5, value=3, step=1, label_visibility="collapsed")
         st.caption("Subjective sentiment score based on logistics feedback.")
 
-        submitted = st.form_submit_button("⚡  Evaluate Customer for Discount")
+        submitted = st.form_submit_button("Evaluate Customer for Discount")
 
     if submitted:
-        with st.spinner("Analysing customer data…"):
+        with st.spinner("Analysing customer data..."):
             try:
                 res = predictor.predict({
                     "orders":       orders,
@@ -212,7 +215,7 @@ with left:
                 })
                 st.session_state.result = res
             except Exception as e:
-                st.error(f"❌ Prediction failed: {e}")
+                st.error(f"Prediction failed: {e}")
                 st.session_state.result = None
 
 with right:
@@ -225,10 +228,10 @@ with right:
             align-items:center; justify-content:center;
             min-height:60vh; color:#ccc; text-align:center; gap:14px;
         ">
-            <div style="font-size:3.8rem;">📊</div>
+            <div style="font-size:3.8rem;">&#128202;</div>
             <p style="font-size:1.5rem; max-width:500px; line-height:1.65; color:#888;">
                 Adjust the sliders on the left and click
-                <strong style="color:#aaa;">⚡ Evaluate Customer</strong>
+                <strong style="color:#aaa;">Evaluate Customer</strong>
                 to see the recommendation and SHAP analysis here.
             </p>
         </div>
@@ -241,7 +244,7 @@ with right:
 
         yes   = recommend == 1
         pct   = round(confidence * 100)
-        v_txt = "✅  Discount Recommended" if yes else "❌  Discount Not Recommended"
+        v_txt = "Discount Recommended" if yes else "Discount Not Recommended"
         v_col = "#28a745" if yes else "#dc3545"
 
         st.markdown(f"""
@@ -262,7 +265,7 @@ with right:
                 background:#FFF0E6; color:#FF6200;
                 font-size:0.8rem; font-weight:600;
                 padding:5px 14px; border-radius:99px;
-            ">💡 {reason}</span>
+            ">{reason}</span>
             <div style="margin-top:18px;">
                 <div style="display:flex;justify-content:space-between;font-size:0.82rem;color:#888;margin-bottom:6px;">
                     <span>Model Confidence</span><span>{pct}%</span>
@@ -276,7 +279,7 @@ with right:
 
         st.markdown("""
         <div style="margin-bottom:6px;">
-            <span style="font-size:1.2rem;font-weight:700;color:#1e1e1e;">🌐 Global SHAP Analysis</span><br>
+            <span style="font-size:1.2rem;font-weight:700;color:#1e1e1e;">Global SHAP Analysis</span><br>
             <span style="font-size:0.78rem;color:#999;">Overall feature importance across the entire trained model.</span>
         </div>
         <hr style="border-top:1px solid #ebebeb;margin:8px 0 14px;">
